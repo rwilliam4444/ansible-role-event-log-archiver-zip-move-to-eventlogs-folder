@@ -1,5 +1,5 @@
 ---
-# tasks file for ansible-role-event-log-archiver-zip-move-to-ibmeventlogs-folder
+# tasks file for ansible-role-event-log-archiver-zip-move-to-eventlogs-folder
 
 # exec_success - True or False depending on whether role completed successfully.
 # exec_changed - False NO Corrective actions for this role.
@@ -13,10 +13,10 @@
     exec_message: "Execution Successfully Completed."
 
 # =============================================================================
-# ibmeventlogs folder check
+# eventlogs folder check
 # =============================================================================
-- name: "ibmeventlogs folder check"
-  include_tasks: ibmeventlogs_folder_check.yml
+- name: "eventlogs folder check"
+  include_tasks: eventlogs_folder_check.yml
 
 # =============================================================================
 # Test for Zip executable file
@@ -73,7 +73,7 @@
 # ==========================================================================
 # Test C: drive for C:\temp - if does not exist - create it
 # ==========================================================================
-- name: "Check C: drive for ibmeventlogs folder"
+- name: "Check C: drive for eventlogs folder"
   win_shell: >
     if (Test-Path -path c:\temp) {Write-Host "Folder exists already"}
     else {c:; cd\; mkdir c:\temp}
