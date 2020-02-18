@@ -1,0 +1,60 @@
+---
+# tasks file for security_evtx_move_zip_delete.yml
+#
+# ==========================================================================
+# move security evtx files from default location to c:\temp
+# ==========================================================================
+- name: "move security evtx files from default location to c:\\temp"
+  win_shell: >
+    gci -path {{ windows_default_log_path }} Archive-Security*.evtx -recurse |
+    move-item -destination c:\temp;test-path -path
+    c:\temp\Archive-Security*.evtx
+  register: move_security_files
+  ignore_errors: true
+
+- name: "set output variable"
+  set_fact:
+   move_security_files_out: "{{ move_security_files.stdout_lines|list|join }}"
+
+- debug:
+   msg: >
+    "Any errors with the move will be listed here........
+    {{ move_security_files_out }}"
+
+# ==========================================================================
+# zip up security evtx files & store in ibmeventlogs folder
+# ==========================================================================
+- name: "Zip up security evtx files & store in ibmeventlogs Folder"
+  win_shell: >
+    cd\;cd {{ ibmeventlogs_path_out }};get-location;
+    {{ zip_path }} a -tzip Security_{{ date_out }}.zip
+    c:\temp\Archive-Se*.*
+  register: zip_sec_evtx
+  ignore_errors: true
+
+- name: "set output variable"
+  set_fact:
+   zip_sec_evtx_out: "{{ zip_sec_evtx.stdout_lines|list|join }}"
+
+- debug:
+   msg: >
+    "Any Zip security log output will be listed here........
+    {{ zip_sec_evtx_out }}"
+
+# ==========================================================================
+# Delete security evtx files in the c:\temp folder
+# ==========================================================================
+- name: "Delete security evtx files in the c:\temp folder"
+  win_shell: >
+    Remove-Item -path c:\temp\Archive-Security*.evtx -force
+  register: del_sec_evtx
+  ignore_errors: true
+
+- name: "set output variable"
+  set_fact:
+   del_sec_evtx_out: "{{ del_sec_evtx.stdout_lines|list|join }}"
+
+- debug:
+   msg: >
+    "Any Delete security log output will be listed here........
+    {{ del_sec_evtx_out }}"

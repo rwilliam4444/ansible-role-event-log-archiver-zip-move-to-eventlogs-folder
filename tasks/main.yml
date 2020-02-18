@@ -1,0 +1,170 @@
+---
+# tasks file for ansible-role-event-log-archiver-zip-move-to-ibmeventlogs-folder
+
+# exec_success - True or False depending on whether role completed successfully.
+# exec_changed - False NO Corrective actions for this role.
+# exec_rc - return code
+# exec_message - message
+- name: Setting the Initial Facts
+  set_fact:
+    exec_success: true
+    exec_changed: true
+    exec_rc: 0
+    exec_message: "Execution Successfully Completed."
+
+# =============================================================================
+# ibmeventlogs folder check
+# =============================================================================
+- name: "ibmeventlogs folder check"
+  include_tasks: ibmeventlogs_folder_check.yml
+
+# =============================================================================
+# Test for Zip executable file
+# =============================================================================
+- name: "Check if zip path exists"
+  win_shell: >
+    if (test-path -path {{ zip_path }}*)
+    {write-host "zip_path exists already"}
+    else {write-host "no zip_path found"}
+  register: check_zip_path
+  ignore_errors: true
+  when: >
+    exec_rc == 0
+
+- name: "set output variable"
+  set_fact:
+    check_zip_path_out: "{{ check_zip_path.stdout_lines|list|join }}"
+  when: exec_rc == 0
+
+- debug:
+    msg: "Zip Path check results........{{ check_zip_path_out }}"
+  when: >
+    exec_rc == 0
+
+- block:
+    - name: Zip path not found
+      set_fact:
+        exec_success: false
+        exec_changed: false
+        exec_rc: 3001
+        exec_message: >
+          "Zip path not found"
+    - debug: var=exec_message
+  when: check_zip_path_out == "no zip_path found"
+
+# =============================================================================
+# Get Date in requested format
+# =============================================================================
+- name: "Get date in requested format"
+  win_shell: get-date -f yyyy-MM-ddTHHmmss
+  register: date
+  ignore_errors: true
+  when: exec_rc == 0
+
+- name: "set Date output variable"
+  set_fact:
+    date_out: "{{ date.stdout_lines|list|join }}"
+  when: exec_rc == 0
+
+- debug:
+    msg: "Date Set........{{ date_out }}"
+  when: exec_rc == 0
+
+# ==========================================================================
+# Test C: drive for C:\temp - if does not exist - create it
+# ==========================================================================
+- name: "Check C: drive for ibmeventlogs folder"
+  win_shell: >
+    if (Test-Path -path c:\temp) {Write-Host "Folder exists already"}
+    else {c:; cd\; mkdir c:\temp}
+  register: check_c_drive_for_temp
+  ignore_errors: true
+  when: >
+    exec_rc == 0
+
+# ==========================================================================
+# Test path for Archive-Security*.evtx
+# ==========================================================================
+- name: "Test path for Archive-Security*.evtx"
+  win_shell: >
+    if (Test-Path -path {{ windows_default_log_path }}\Archive-Security*.evtx)
+    {Write-Host "evtx files exist"} else
+    {write-host "No Security evtx files found"}
+  register: chk_for_sec_evtx
+  ignore_errors: true
+  when: >
+    exec_rc == 0
+
+- name: "set output variable"
+  set_fact:
+    chk_for_sec_evtx_out: "{{ chk_for_sec_evtx.stdout_lines|list|join }}"
+
+- debug:
+    msg: "Security evtx search results........{{ chk_for_sec_evtx_out }}"
+
+# =============================================================================
+# Run security evtx file move, zip, delete role if files exist
+# =============================================================================
+- name: "Run security evtx file move, zip, delete role if files exist"
+  include_tasks: security_evtx_move_zip_delete.yml
+  when: >
+    chk_for_sec_evtx_out == "evtx files exist" and
+    exec_rc == 0
+
+# ==========================================================================
+# Test path for Archive-System*.evtx
+# ==========================================================================
+- name: "Test path for Archive-System*.evtx"
+  win_shell: >
+    if (Test-Path -path {{ windows_default_log_path }}\Archive-System*.evtx)
+    {Write-Host "evtx files exist"} else
+    {write-host "No System evtx files found"}
+  register: chk_for_sys_evtx
+  ignore_errors: true
+  when: >
+    exec_rc == 0
+
+- name: "set output variable"
+  set_fact:
+    chk_for_sys_evtx_out: "{{ chk_for_sys_evtx.stdout_lines|list|join }}"
+
+- debug:
+    msg: "System evtx search results........{{ chk_for_sys_evtx_out }}"
+
+# =============================================================================
+# Run system evtx file move, zip, delete role if files exist
+# =============================================================================
+- name: "Run system evtx file move, zip, delete role if files exist"
+  include_tasks: system_evtx_move_zip_delete.yml
+  when: >
+    chk_for_sys_evtx_out == "evtx files exist" and
+    exec_rc == 0
+
+# ==========================================================================
+# Test path for Archive-Application*.evtx
+# ==========================================================================
+- name: "Test path for Archive-Application*.evtx"
+  win_shell: >
+    if (Test-Path -path {{ windows_default_log_path }}\Archive-Applicati*.evtx)
+    {Write-Host "evtx files exist"} else
+    {write-host "No Application evtx files found"}
+  register: chk_for_app_evtx
+  ignore_errors: true
+  when: >
+    exec_rc == 0
+
+- name: "set output variable"
+  set_fact:
+    chk_for_app_evtx_out: "{{ chk_for_app_evtx.stdout_lines|list|join }}"
+
+- debug:
+    msg: "Application evtx search results........{{ chk_for_app_evtx_out }}"
+
+# =============================================================================
+# Run application evtx file move, zip, delete role if files exist
+# =============================================================================
+- name: "Run application evtx file move, zip, delete role if files exist"
+  include_tasks: application_evtx_move_zip_delete.yml
+  when: >
+    chk_for_app_evtx_out == "evtx files exist" and
+    exec_rc == 0

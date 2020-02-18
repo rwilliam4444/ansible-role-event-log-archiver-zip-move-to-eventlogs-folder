@@ -1,0 +1,60 @@
+---
+# tasks file for system_evtx_move_zip_delete.yml
+#
+# ==========================================================================
+# move system evtx files from default location to c:\temp
+# ==========================================================================
+- name: "move system evtx files from default location to c:\\temp"
+  win_shell: >
+    gci -path {{ windows_default_log_path }} Archive-system*.evtx -recurse |
+    move-item -destination c:\temp;test-path -path
+    c:\temp\Archive-system*.evtx
+  register: move_system_files
+  ignore_errors: true
+
+- name: "set output variable"
+  set_fact:
+   move_system_files_out: "{{ move_system_files.stdout_lines|list|join }}"
+
+- debug:
+   msg: >
+    "Any errors with the move will be listed here........
+    {{ move_system_files_out }}"
+
+# ==========================================================================
+# zip up system evtx files & store in ibmeventlogs folder
+# ==========================================================================
+- name: "Zip up system evtx files & store in ibmeventlogs Folder"
+  win_shell: >
+    cd\;cd {{ ibmeventlogs_path_out }};get-location;
+    {{ zip_path }} a -tzip system_{{ date_out }}.zip
+    c:\temp\Archive-Se*.*
+  register: zip_sys_evtx
+  ignore_errors: true
+
+- name: "set output variable"
+  set_fact:
+   zip_sys_evtx_out: "{{ zip_sys_evtx.stdout_lines|list|join }}"
+
+- debug:
+   msg: >
+    "Any Zip system log output will be listed here........
+    {{ zip_sys_evtx_out }}"
+
+# ==========================================================================
+# Delete system evtx files in the c:\temp folder
+# ==========================================================================
+- name: "Delete system evtx files in the c:\temp folder"
+  win_shell: >
+    Remove-Item -path c:\temp\Archive-system*.evtx -force
+  register: del_sys_evtx
+  ignore_errors: true
+
+- name: "set output variable"
+  set_fact:
+   del_sys_evtx_out: "{{ del_sys_evtx.stdout_lines|list|join }}"
+
+- debug:
+   msg: >
+    "Any Delete system log output will be listed here........
+    {{ del_sys_evtx_out }}"
