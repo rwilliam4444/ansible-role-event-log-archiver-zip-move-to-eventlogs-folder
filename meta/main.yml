@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: Richard M. Williams
-  role_name: ansible-role-event-log-archiver-zip-move-to-ibmeventlogs-folder
+  role_name: ansible-role-event-log-archiver-zip-move-to-eventlogs-folder
   description: zips-up & moves sec, app, sys event logs
   company: 
   license: 
