@@ -3,11 +3,11 @@
 
 # Description:
 This role will check the server's drives (C, D, E, & F), at the root level, for
-a directory called ibmeventlogs.   If none are found then a folder will be
-created on the C: drive called c:\\ibmeventlogs.   The role will also ensure
+a directory called eventlogs.   If none are found then a folder will be
+created on the C: drive called c:\\eventlogs.   The role will also ensure
 that the necessary ZIP utility file is on the server.  The role will then zip
 the system, security and application event logs files (archive*.evtx) inside the
-previously mentioned folder called ibmeventlogs.   Once the files are zipped,
+previously mentioned folder called eventlogs.   Once the files are zipped,
 then the playbook will remove the archive*.evtx files.
 
 # Requirements
