@@ -1,5 +1,5 @@
 ---
-# defaults file -ansible-role-event-log-archiver-zip-move-to-ibmeventlogs-folder
+# defaults file -ansible-role-event-log-archiver-zip-move-to-eventlogs-folder
 zip_path: "C:\\Scripts\\Sec_Log_Archive\\7z"
 number_days_before_deletion: 270
 windows_default_log_path: "C:\\windows\\system32\\winevt\\logs"
