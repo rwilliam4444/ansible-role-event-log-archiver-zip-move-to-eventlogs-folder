@@ -22,11 +22,11 @@
     {{ move_app_files_out }}"
 
 # ==========================================================================
-# zip up application evtx files & store in ibmeventlogs folder
+# zip up application evtx files & store in eventlogs folder
 # ==========================================================================
-- name: "Zip up application evtx files & store in ibmeventlogs Folder"
+- name: "Zip up application evtx files & store in eventlogs Folder"
   win_shell: >
-    cd\;cd {{ ibmeventlogs_path_out }};get-location;
+    cd\;cd {{ eventlogs_path_out }};get-location;
     {{ zip_path }} a -tzip application_{{ date_out }}.zip
     c:\temp\Archive-Se*.*
   register: zip_app_evtx
