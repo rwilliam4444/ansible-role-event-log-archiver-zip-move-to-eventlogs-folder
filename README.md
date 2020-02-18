@@ -1,0 +1,1 @@
+# ansible-role-event-log-archiver-zip-move-to-ibmeventlogs-folder
