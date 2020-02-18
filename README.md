@@ -20,7 +20,7 @@ Parameter | Choices/Defaults|Comments
 ----------|-----------------|--------
 __zip_path__  (string)|"C:\\Scripts\\Sec_Log_Archive\\7z"|default zip path
 __windows_default_log_path__ (string)|"C:\\windows\\system32\\winevt\\logs"|default log path
-__number_days_before_deletion__ |270|# of days old before it will delete file
+__number_days_before_deletion__ (int) |270|# of days old before it will delete file
 
 # Results from execution
 
