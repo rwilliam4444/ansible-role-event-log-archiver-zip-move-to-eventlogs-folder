@@ -28,7 +28,7 @@ Return Code | Success of execution| effect on target machine | Comments
 ----------|-----------------|--------|---------
 0 | True | True | event log manager on __affected_host__  was successful.
 0 | True | False | event log manager on  __affected_host__ took no action.
-3000 | False | False | could not find or create the ibmeventlogs folder.
+3000 | False | False | could not find or create the eventlogs folder.
 3001 | False | False | could not find the zip_path folder and executable.
 
 
