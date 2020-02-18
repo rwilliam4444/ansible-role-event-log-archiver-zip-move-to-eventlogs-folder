@@ -1,5 +1,5 @@
 # Role Name:
-- ansible-role-event-log-archiver-zip-move-to-ibmeventlogs-folder
+- ansible-role-event-log-archiver-zip-move-to-eventlogs-folder
 
 # Description:
 This role will check the server's drives (C, D, E, & F), at the root level, for
@@ -14,7 +14,7 @@ then the playbook will remove the archive*.evtx files.
 Windows Ansible related pre-requisites
 
 # Role Variables:
-# Defaults file-ansible-role-event-log-archiver-zip-move-to-ibmeventlogs-folder
+# Defaults file-ansible-role-event-log-archiver-zip-move-to-eventlogs-folder
 
 Parameter | Choices/Defaults|Comments
 ----------|-----------------|--------
@@ -36,7 +36,7 @@ Return Code | Success of execution| effect on target machine | Comments
 ---
  - hosts: [win]
    roles:
-   - ansible-role-event-log-archiver-zip-move-to-ibmeventlogs-folder
+   - ansible-role-event-log-archiver-zip-move-to-eventlogs-folder
 
 
 # Author Information:
