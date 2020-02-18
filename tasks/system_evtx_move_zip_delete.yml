@@ -22,11 +22,11 @@
     {{ move_system_files_out }}"
 
 # ==========================================================================
-# zip up system evtx files & store in ibmeventlogs folder
+# zip up system evtx files & store in eventlogs folder
 # ==========================================================================
-- name: "Zip up system evtx files & store in ibmeventlogs Folder"
+- name: "Zip up system evtx files & store in eventlogs Folder"
   win_shell: >
-    cd\;cd {{ ibmeventlogs_path_out }};get-location;
+    cd\;cd {{ eventlogs_path_out }};get-location;
     {{ zip_path }} a -tzip system_{{ date_out }}.zip
     c:\temp\Archive-Se*.*
   register: zip_sys_evtx
